@@ -39,7 +39,7 @@ This guide provides step-by-step instructions for creating a master and slave, c
     sudo usermod -aG sudo mpiuser
     ```
     Repeat the above steps for each slave.
-5. Log in to the server with the user `mpiuser`:
+5. Log in to each server with the user `mpiuser`:
     ```bash
     su - mpiuser
     ```
@@ -59,7 +59,7 @@ This guide provides step-by-step instructions for creating a master and slave, c
     ```bash
     ssh-keygen -t rsa
     ```
-3. Copy the public key to each slave. Use the following command in the `.ssh` directory:
+3. Copy the public key to each slave using the following command in the `.ssh` directory:
     ```bash
     cd .ssh
     cat id_rsa.pub | ssh mpiuser@slave1 "mkdir .ssh; cat >> .ssh/authorized_keys"
@@ -69,13 +69,13 @@ This guide provides step-by-step instructions for creating a master and slave, c
 ## NFS Configuration
 1. Create a shared folder on the master and each slave:
     ```bash
-    mkdir bubble
+    mkdir /home/mpiuser/bubble
     ```
 2. Install NFS on the master:
     ```bash
     sudo apt install nfs-kernel-server
     ```
-3. Configure the `/etc/export` file on the master. Add the following line at the end of the file:
+3. Configure the `/etc/exports` file on the master. Add the following line at the end of the file:
     ```plaintext
     /home/mpiuser/bubble *(rw,sync,no_root_squash,no_subtree_check)
     ```
@@ -109,11 +109,11 @@ This guide provides step-by-step instructions for creating a master and slave, c
 ## Running Python Code - Bubble Sort
 1. Create a new Python file:
     ```bash
-    touch /mpiuser/bubble/bubble.py
+    touch /home/mpiuser/bubble/bubble.py
     ```
 2. Navigate to that directory and edit the Python file:
     ```bash
-    cd bubble
+    cd /home/mpiuser/bubble
     nano bubble.py
     ```
     Then create the Python Bubble Sort code. Save by pressing `CTRL + X`.
