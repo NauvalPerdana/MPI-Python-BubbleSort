@@ -24,7 +24,7 @@ Laporan ini memberikan langkah-langkah untuk membuat master dan slave, konfigura
 5. Code Bubble Sort Python
 
 ## Topologi Bridged
-![Topologi]()
+![Topologi](https://github.com/NauvalPerdana/MPI-BubbleSort/blob/main/Topologi.png)
 
 ## Pembuatan Master dan Slave
 1. Pastikan setiap master dan slave menggunakan Network Bridge Adapter dan terhubung ke internet.
