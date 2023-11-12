@@ -153,7 +153,7 @@ Laporan ini memberikan langkah-langkah untuk membuat master dan slave, konfigura
     ```
 
     Lalu buatlah code Bubble Sort Python. Simpan dengan menekan `CTRL + X`.
-   [bubble.py code]()
+   [bubble.py code](https://github.com/NauvalPerdana/MPI-BubbleSort/blob/main/bubble.py)
 
 3. Jalankan code tersebut pada master:
 
