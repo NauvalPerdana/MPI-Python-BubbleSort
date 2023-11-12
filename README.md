@@ -116,7 +116,7 @@ This guide provides step-by-step instructions for creating a master and slave, c
     cd /home/mpiuser/bubble
     nano bubble.py
     ```
-    Then create the Python Bubble Sort code. Save by pressing `CTRL + X`.
+    Then create the Python Bubble Sort code. Save by pressing `CTRL + X` and then press `Y`.
    [bubble.py code](https://github.com/NauvalPerdana/MPI-BubbleSort/blob/main/bubble.py)
 
 3. Run the code on the master:
