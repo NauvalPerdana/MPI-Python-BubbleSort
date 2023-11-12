@@ -1,107 +1,107 @@
 # MPI-BubbleSort
-# Panduan Pembuatan Master dan Slave untuk Open MPI dengan Bubble Sort pada Ubuntu Desktop
+## Guide to Creating Master and Slave for Open MPI with Bubble Sort on Ubuntu Desktop
 
-Laporan ini memberikan langkah-langkah untuk membuat master dan slave, konfigurasi SSH, konfigurasi NFS, instalasi MPI, dan menjalankan kodingan Bubble Sort dengan Python pada Ubuntu Desktop.
+This guide provides step-by-step instructions for creating a master and slave, configuring SSH, configuring NFS, installing MPI, and running Bubble Sort code with Python on Ubuntu Desktop.
 
-## Daftar Isi
-- [Device dan Tools yang Perlu Disiapkan](#device-dan-tools-yang-perlu-disiapkan)
-- [Topologi Bridged](#topologi-bridged)
-- [Pembuatan Master dan Slave](#pembuatan-master-dan-slave)
-- [Konfigurasi SSH](#konfigurasi-ssh)
-- [Konfigurasi NFS](#konfigurasi-nfs)
-- [Instalasi MPI](#instalasi-mpi)
-- [Running Code Python - Bubble Sort](#running-code-python---bubble-sort)
+## Table of Contents
+- [Devices and Tools to Prepare](#devices-and-tools-to-prepare)
+- [Bridged Topology](#bridged-topology)
+- [Creating Master and Slave](#creating-master-and-slave)
+- [SSH Configuration](#ssh-configuration)
+- [NFS Configuration](#nfs-configuration)
+- [MPI Installation](#mpi-installation)
+- [Running Python Code - Bubble Sort](#running-python-code---bubble-sort)
 
-## Device dan Tools yang Perlu Disiapkan
+## Devices and Tools to Prepare
 1. Ubuntu Desktop
    - Ubuntu Desktop Master
    - Ubuntu Desktop Slave 1
    - Ubuntu Desktop Slave 2
    - Ubuntu Desktop Slave 3
-2. MPI (Master dan Slave)
-3. SSH (Master dan Slave)
-4. NFS (Master dan Slave)
-5. Code Bubble Sort Python
+2. MPI (Master and Slave)
+3. SSH (Master and Slave)
+4. NFS (Master and Slave)
+5. Python Bubble Sort Code
 
-## Topologi Bridged
-![Topologi](https://github.com/NauvalPerdana/MPI-BubbleSort/blob/main/Topologi.png)
+## Bridged Topology
+![Topology](https://github.com/NauvalPerdana/MPI-BubbleSort/blob/main/Topologi.png)
 
-## Pembuatan Master dan Slave
-1. Pastikan setiap master dan slave menggunakan Network Bridge Adapter dan terhubung ke internet.
-2. Tentukan perangkat mana yang akan dijadikan master, slave1, slave2, dan slave3.
-3. Buat user baru dengan perintah berikut pada master dan setiap slave:
+## Creating Master and Slave
+1. Ensure that each master and slave uses a Network Bridge Adapter and is connected to the internet.
+2. Determine which device will be the master, slave1, slave2, and slave3.
+3. Create a new user with the following command on the master and each slave:
 
     ```bash
     sudo adduser mpiuser
     ```
 
-    Gantilah bagian 'master' menjadi 'slave1', 'slave2', dan seterusnya untuk slave.
+    Replace 'master' with 'slave1', 'slave2', and so on for each slave.
 
-4. Berikan akses kepada root dengan perintah:
+4. Grant root access with the command:
 
     ```bash
     sudo usermod -aG sudo mpiuser
     ```
 
-    Lakukan langkah di atas untuk setiap slave dengan mengganti pengguna 'master' menjadi 'slave1', 'slave2', dan seterusnya.
+    Repeat the above steps for each slave, replacing 'master' with 'slave1', 'slave2', and so on.
 
-5. Masuk ke server dengan pengguna `mpiuser`:
+5. Log in to the server with the user `mpiuser`:
 
     ```bash
     su - mpiuser
     ```
 
-6. Update Ubuntu Desktop dan install tools:
+6. Update Ubuntu Desktop and install tools:
 
     ```bash
     sudo apt update && sudo apt upgrade
     sudo apt install net-tools vim
     ```
 
-7. Konfigurasi file `/etc/hosts` pada master, slave1, slave2, dan slave3. Daftarkan IP dan hostname masing-masing komputer.
+7. Configure the `/etc/hosts` file on the master, slave1, slave2, and slave3. Register the IP and hostname of each computer.
 
-## Konfigurasi SSH
-1. Install OpenSSH pada master dan semua slave:
+## SSH Configuration
+1. Install OpenSSH on the master and all slaves:
 
     ```bash
     sudo apt install openssh-server
     ```
 
-2. Generate key pada master:
+2. Generate a key on the master:
 
     ```bash
     ssh-keygen -t rsa
     ```
 
-3. Copy key public ke setiap slave. Gunakan perintah berikut pada direktori `.ssh`:
+3. Copy the public key to each slave. Use the following command in the `.ssh` directory:
 
     ```bash
     cd .ssh
     cat id_rsa.pub | ssh mpiuser@slave1 "mkdir .ssh; cat >> .ssh/authorized_keys"
     ```
 
-    Ulangi perintah di atas untuk setiap slave.
+    Repeat the command for each slave.
 
-## Konfigurasi NFS
-1. Buat shared folder pada master dan setiap slave:
+## NFS Configuration
+1. Create a shared folder on the master and each slave:
 
     ```bash
     mkdir bubble
     ```
 
-2. Install NFS pada master:
+2. Install NFS on the master:
 
     ```bash
     sudo apt install nfs-kernel-server
     ```
 
-3. Konfigurasi file `/etc/export` pada master. Tambahkan baris berikut pada akhir file:
+3. Configure the `/etc/export` file on the master. Add the following line at the end of the file:
 
     ```plaintext
     /home/mpiuser/bubble *(rw,sync,no_root_squash,no_subtree_check)
     ```
 
-    Lokasi Shared Folder adalah direktori tempat file bubble di atas dibuat.
+    The Shared Folder location is the directory where the bubble file was created above.
 
 4. Restart NFS Server:
 
@@ -110,58 +110,56 @@ Laporan ini memberikan langkah-langkah untuk membuat master dan slave, konfigura
     sudo systemctl restart nfs-kernel-server
     ```
 
-5. Install NFS pada setiap slave:
+5. Install NFS on each slave:
 
     ```bash
     sudo apt install nfs-common
     ```
 
-6. Mount shared folder dari master ke setiap slave:
+6. Mount the shared folder from the master to each slave:
 
     ```bash
     sudo mount master:/home/mpiuser/bubble /home/mpiuser/bubble
     ```
 
-    Ulangi perintah di atas untuk setiap slave.
+    Repeat the command for each slave.
 
-## Instalasi MPI
-1. Install Open MPI pada master dan semua slave:
+## MPI Installation
+1. Install Open MPI on the master and all slaves:
 
     ```bash
     sudo apt install openmpi-bin libopenmpi-dev
     ```
 
-2. Install library MPI melalui pip:
+2. Install the MPI library via pip:
 
     ```bash
     sudo apt install python3-pip
     pip install mpi4py
     ```
 
-## Running Code Python - Bubble Sort
-1. Buatlah sebuah file python baru:
+## Running Python Code - Bubble Sort
+1. Create a new Python file:
 
     ```bash
     touch /mpiuser/bubble/bubble.py
     ```
 
-2. Masuk ke direktori tersebut dan edit file python:
+2. Navigate to that directory and edit the Python file:
 
     ```bash
     cd bubble
     nano bubble.py
     ```
 
-    Lalu buatlah code Bubble Sort Python. Simpan dengan menekan `CTRL + X`.
+    Then create the Python Bubble Sort code. Save by pressing `CTRL + X`.
    [bubble.py code](https://github.com/NauvalPerdana/MPI-BubbleSort/blob/main/bubble.py)
 
-3. Jalankan code tersebut pada master:
+3. Run the code on the master:
 
     ```bash
     mpirun -np 4 -host master,slave1,slave2,slave3 python3 bubble.py
     ```
 
    ![Output](https://github.com/NauvalPerdana/MPI-BubbleSort/blob/main/output.png)
-    Jika sudah keluar output seperti ini sudah berhasil, mengeluarkan output di semua master dan slave, outputnya menjadi 4 yaitu output dari master, slave1, slave2, slave3. Jadi yang kami urutkan disini berupa array: [5, 3, 4, 1, 2] diurutkan menjadi [1, 2, 3, 4, 5].
-
-   
+    If the output like this appears, it has been successful, displaying the output on both the master and slaves, with the output being 4, which is the output from the master, slave1, slave2, and slave3. So what we sorted here is an array: [5, 3, 4, 1, 2] sorted to [1, 2, 3, 4, 5].
