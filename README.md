@@ -1,6 +1,6 @@
 # MPI-BubbleSort
 
-## Guide to Creating Master and Slave for Open MPI with Bubble Sort Python Code on Ubuntu Desktop
+## Running Bubble Sort Python with MPI Multinode Cluster on Ubuntu Desktop
 
 This guide provides step-by-step instructions for creating a master and slave, configuring SSH, configuring NFS, installing MPI, and running Bubble Sort code with Python on Ubuntu Desktop.
 
