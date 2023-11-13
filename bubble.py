@@ -20,7 +20,7 @@ def parallel_bubble_sort(arr):
         for i in range(len(arr)):
             arr[i] = combined_arr[i]
 
-if _name_ == '_main_':
+if __name__ == '__main__':
     comm = MPI.COMM_WORLD
     rank = comm.Get_rank()
 
